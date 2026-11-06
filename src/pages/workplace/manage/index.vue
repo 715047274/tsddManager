@@ -13,8 +13,11 @@
             <el-form-item class="mb-0 !mr-16px">
               <el-button type="primary" @click="getTableList">查询</el-button>
             </el-form-item>
-            <el-form-item class="mb-0 !mr-0">
+            <el-form-item class="mb-0 !mr-16px">
               <el-button type="primary" @click="onAppVersionAdd">新增应用</el-button>
+            </el-form-item>
+            <el-form-item class="mb-0 !mr-0">
+              <el-button type="success" @click="onMiniAppAdd">新增小程序</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -57,7 +60,14 @@
       </div>
     </div>
     <!-- 应用 -->
-    <Apply v-model:value="applyAddValue" :type="applyType" :title="applyTitle" :data="applyData" @ok="onApplyClick" />
+    <Apply
+      v-model:value="applyAddValue"
+      :type="applyType"
+      :title="applyTitle"
+      :data="applyData"
+      :default-jump-type="applyJumpType"
+      @ok="onApplyClick"
+    />
   </bd-page>
 </template>
 
@@ -68,7 +78,7 @@ meta:
 </route>
 
 <script lang="tsx" setup>
-import { ElButton, ElMessageBox, ElMessage, ElSpace } from 'element-plus';
+import { ElButton, ElMessageBox, ElMessage, ElSpace, ElTag } from 'element-plus';
 import { Fancybox } from '@fancyapps/ui';
 import Apply from './components/Apply.vue';
 import { BU_DOU_CONFIG } from '@/config';
@@ -82,9 +92,19 @@ import { appGet, appDelete } from '@/api/workplace/app';
 const applyAddValue = ref<boolean>(false);
 const applyTitle = ref('新增应用');
 const applyType = ref<'add' | 'edit'>('add');
+// 新增时默认的打开方式: 0 网页, 1 APP, 2 小程序
+const applyJumpType = ref<number>(0);
 const onAppVersionAdd = () => {
+  applyJumpType.value = 0;
   applyAddValue.value = true;
   applyTitle.value = '新增应用';
+  applyType.value = 'add';
+};
+// 新增小程序: 打开表单并直接显示 .zip 上传
+const onMiniAppAdd = () => {
+  applyJumpType.value = 2;
+  applyAddValue.value = true;
+  applyTitle.value = '新增小程序';
   applyType.value = 'add';
 };
 
@@ -128,6 +148,21 @@ const column = reactive<Column.ColumnOptions[]>([
     prop: 'name',
     label: '应用名称',
     width: 160
+  },
+  {
+    prop: 'jump_type',
+    label: '打开方式',
+    width: 100,
+    align: 'center',
+    render: (scope: any) => {
+      const types: Record<number, { label: string; type: 'primary' | 'warning' | 'success' }> = {
+        0: { label: '网页', type: 'primary' },
+        1: { label: 'APP', type: 'warning' },
+        2: { label: '小程序', type: 'success' }
+      };
+      const t = types[scope.row.jump_type] ?? types[0];
+      return <ElTag type={t.type}>{t.label}</ElTag>;
+    }
   },
   {
     prop: 'app_id',

@@ -1,0 +1,9 @@
+# Packages a dist/ built on the host (see scripts/build-local-image.sh).
+# Use this when the container VM has too little memory for `vite build`
+# (the multi-stage Dockerfile needs roughly 4 GB).
+FROM nginx:latest
+COPY docker-entrypoint.sh /docker-entrypoint2.sh
+COPY nginx.conf.template /
+COPY dist /usr/share/nginx/html
+ENTRYPOINT ["sh", "/docker-entrypoint2.sh"]
+CMD ["nginx","-g","daemon off;"]
