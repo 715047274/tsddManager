@@ -85,6 +85,7 @@ import { BU_DOU_CONFIG } from '@/config';
 
 // API接口
 import { appGet, appDelete } from '@/api/workplace/app';
+import { accessAppGroupsGet } from '@/api/workplace/access';
 /**
  * 新增应用
  */
@@ -178,6 +179,22 @@ const column = reactive<Column.ColumnOptions[]>([
     }
   },
   {
+    prop: 'access',
+    label: '可见范围',
+    width: 160,
+    render: (scope: any) => {
+      const names = appGroups.value[scope.row.app_id] || [];
+      if (!names.length) return <ElTag type="info">所有人</ElTag>;
+      return (
+        <ElSpace wrap size={4}>
+          {names.map(n => (
+            <ElTag type="success">{n}</ElTag>
+          ))}
+        </ElSpace>
+      );
+    }
+  },
+  {
     prop: 'description',
     label: '应用描述'
   },
@@ -212,9 +229,15 @@ const queryFrom = reactive({
   page_index: 1
 });
 
+// 应用所在的权限组 (应用权限组页面管理); 不在任何组的应用所有人可见
+const appGroups = ref<Record<string, string[]>>({});
+
 // 搜索
 const getTableList = () => {
   loadTable.value = true;
+  accessAppGroupsGet()
+    .then((res: any) => (appGroups.value = res || {}))
+    .catch(() => {});
   appGet(queryFrom)
     .then((res: any) => {
       loadTable.value = false;
