@@ -1,7 +1,7 @@
 import request from '@/utils/axios';
 
-// 应用权限组 (app access groups). An app in no group is open to everyone;
-// an app in groups is open only to those groups' members.
+// 应用权限组 (app access groups). A group member can use only the apps of
+// their groups; a user in no group can use only the apps in no group.
 
 export function accessGroupGet() {
   return request({ url: '/manager/workplace/access/group', method: 'get' });
@@ -39,7 +39,7 @@ export function accessGroupMemberDelete(group_no: string, uid: string) {
   return request({ url: `/manager/workplace/access/groups/${group_no}/members/${uid}`, method: 'delete' });
 }
 
-// { app_id: [group names] } — apps missing from it are open to everyone.
+// { app_id: [group names] } — apps missing from it are open to users in no group.
 export function accessAppGroupsGet() {
   return request({ url: '/manager/workplace/access/app_groups', method: 'get' });
 }

@@ -184,7 +184,7 @@ const column = reactive<Column.ColumnOptions[]>([
     width: 160,
     render: (scope: any) => {
       const names = appGroups.value[scope.row.app_id] || [];
-      if (!names.length) return <ElTag type="info">所有人</ElTag>;
+      if (!names.length) return <ElTag type="info">未分组用户</ElTag>;
       return (
         <ElSpace wrap size={4}>
           {names.map(n => (
@@ -229,7 +229,7 @@ const queryFrom = reactive({
   page_index: 1
 });
 
-// 应用所在的权限组 (应用权限组页面管理); 不在任何组的应用所有人可见
+// 应用所在的权限组 (应用权限组页面管理); 不在任何组的应用只对不属于任何组的用户可见
 const appGroups = ref<Record<string, string[]>>({});
 
 // 搜索

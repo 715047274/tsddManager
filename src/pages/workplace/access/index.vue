@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="p-12px text-12px opacity-70 leading-18px">
-        不在任何权限组里的应用对所有人可见；加入权限组后，只有该组成员可见。用户属于多个组时，可用应用为各组之和。
+        权限组成员只能使用所在组的应用（属于多个组时为各组之和）；不属于任何组的用户只能使用未加入任何组的应用。
       </div>
     </div>
 
@@ -61,7 +61,7 @@
                       <div class="text-12px opacity-60 truncate">
                         <template v-if="otherGroups(app.app_id).length">也在: {{ otherGroups(app.app_id).join('、') }}</template>
                         <template v-else-if="app.status !== 1">已禁用</template>
-                        <template v-else-if="!selectedApps.includes(app.app_id)">所有人可见</template>
+                        <template v-else-if="!selectedApps.includes(app.app_id)">未分组用户可见</template>
                       </div>
                     </div>
                   </div>
@@ -174,7 +174,7 @@
         <p class="m-0 mb-6px">可用应用:</p>
         <div>
           <el-tag v-for="a in checkResult.apps" :key="a.app_id" class="mr-6px mb-6px" :type="a.open_to_all ? 'info' : 'success'">
-            {{ a.name }}{{ a.open_to_all ? ' (所有人)' : '' }}
+            {{ a.name }}{{ a.open_to_all ? ' (未分组应用)' : '' }}
           </el-tag>
           <span v-if="!checkResult.apps.length" class="opacity-60">无</span>
         </div>
@@ -291,7 +291,7 @@ const saveGroup = async () => {
 const onDeleteGroup = () => {
   const g = current.value!;
   ElMessageBox.confirm(
-    `删除“${g.name}”后，它的 ${g.member_count} 名成员将失去该组的应用；只属于该组的应用会变为所有人可见。`,
+    `删除“${g.name}”后，它的 ${g.member_count} 名成员将失去该组的应用（不在其他组的成员改为使用未分组的应用）；只属于该组的应用会变为未分组用户可见。`,
     '删除权限组',
     { type: 'warning', confirmButtonText: '删除', cancelButtonText: '取消' }
   )
