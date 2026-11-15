@@ -19,9 +19,18 @@ server {
             client_body_buffer_size 500m;
         }
 
+        # Hashed build assets never change: cache them for a long time.
+        location /static/ {
+            root   /usr/share/nginx/html;
+            add_header Cache-Control "public, max-age=31536000, immutable";
+        }
+
+        # index.html and tsdd-config.js must be re-checked on every load,
+        # otherwise browsers keep showing an old manager after an update.
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
             try_files $uri $uri/ /index.html;
+            add_header Cache-Control "no-cache";
         }
 }

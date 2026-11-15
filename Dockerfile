@@ -1,11 +1,11 @@
-FROM node:16.20.1 as builder
+FROM node:20 as builder
 WORKDIR /app
-RUN npm config set registry https://registry.npm.taobao.org
-RUN npm install pnpm -g
+RUN npm config set registry https://registry.npmmirror.com
+RUN npm install -g pnpm@9
 
 COPY . .
 
-RUN pnpm install && pnpm build
+RUN pnpm install --frozen-lockfile && pnpm build
 
 
 FROM nginx:latest

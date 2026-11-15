@@ -26,6 +26,19 @@ const home: Menu.MenuOptions = {
       }
     },
     {
+      name: 'workplaceAccess',
+      path: '/workplace/access',
+      meta: {
+        icon: 'i-bd-shield',
+        isAffix: false,
+        isFull: false,
+        isHide: false,
+        isKeepAlive: true,
+        isLink: '',
+        title: '应用权限组'
+      }
+    },
+    {
       name: 'workplaceConfiguration',
       path: '/workplace/configuration',
       meta: {

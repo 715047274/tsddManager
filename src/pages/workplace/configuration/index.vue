@@ -19,6 +19,7 @@ meta:
 <script lang="tsx" setup>
 import Banner from './components/Banner.vue';
 import CustomGroup from './components/CustomGroup.vue';
+import HomeWidget from './components/HomeWidget.vue';
 
 const activeName = ref('banner');
 
@@ -28,6 +29,13 @@ const tabsData = reactive([
     label: '轮播',
     render: () => {
       return <Banner />;
+    }
+  },
+  {
+    name: 'home-widget',
+    label: '首页组件',
+    render: () => {
+      return <HomeWidget />;
     }
   },
   {
