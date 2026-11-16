@@ -28,6 +28,7 @@
           <img v-if="formData.icon" :src="`${BU_DOU_CONFIG.APP_URL}${formData.icon}`" class="avatar" />
           <el-icon v-else><Plus /></el-icon>
         </el-upload>
+        <div class="bd-form-tip">建议 256×256 像素（不小于 160×160），正方形 PNG / JPG，客户端会自动裁成圆角，无需自带圆角。</div>
       </el-form-item>
       <el-form-item label="打开方式">
         <el-radio-group v-model="formData.jump_type">
